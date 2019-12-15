@@ -56,7 +56,7 @@ void loop() {
     
     // read the next key
     char c = keyboard.read();
-    
+    /*
     // check for some of the special keys
     if (c == PS2_ENTER) {
       Serial.println();
@@ -83,7 +83,18 @@ void loop() {
       // otherwise, just print all normal characters
       Serial.print(c);
     }
+    */
 
+
+    //process Backspace, Left Arrow, Delete as Apple I backspace '_'
+    if (c == PS2_BACKSPACE) {
+      c = '_';
+    } else if (c == PS2_LEFTARROW) {
+       c = '_';
+    } else if (c == PS2_DELETE) {
+      c = '_';
+    }
+    
     //print c to register
     for (int count = 1; count <= 8 ; count++) 
     {
@@ -94,6 +105,6 @@ void loop() {
     }
     digitalWrite(DataBus[7], HIGH);
     KBDCR_Enable();
-    delay(20);
+    delay(4);
   }
 }
