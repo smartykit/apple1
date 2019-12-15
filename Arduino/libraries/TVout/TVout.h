@@ -136,6 +136,8 @@ public:
     void tone(unsigned int frequency);
     void noTone();
 
+    uint8_t _cursorX, _cursorY;
+    const unsigned char* font;
 
 private:
     // hook setup functions
@@ -148,8 +150,8 @@ private:
     void forceLineStart(uint8_t line);
     void incTxtLine();
 
-    uint8_t _cursorX, _cursorY;
-    const unsigned char* font;
+
+
 };
 
 static void inline sp(uint8_t x, uint8_t y, char c); 
