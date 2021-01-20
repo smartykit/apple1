@@ -1,0 +1,26 @@
+// This is a modified version of the original code of the 
+// "Getting The System Running"-Section written by Steve 
+// Wozniak in 1976.
+
+0000: A9 00			// LDA #0
+0002: AA			// TAX
+0003: 20 DC FF			// Print Byte as Hex
+0006: A9 3D			// LDA "="
+0008: 20 EF FF			// JSR $FFEF  -> 'Echo' the accu
+000B: 8A			// TXA
+000C: 20 EF FF			// JSR $FFEF  -> 'Echo' the accu
+000F: A9 20			// LDA " "
+0011: 20 EF FF			// JSR $FFEF  -> 'Echo' the accu
+0014: E8			// INX
+0015: 8A			// TXA
+0016: 4C 03 00			// JMP $0002  -> Next Character
+
+// Load this program by choosing the "Load Memory..."-item of the "File"-menu.
+// If there is an error while loading the error message will be displayed in
+// the Apple-1 monitor. Start the Program with "0 R" (which means "Go to $0000 and Run!")
+// It should print out all the characters with its byte number in the monitor.
+// You can only stop the program by reseting the cpu with command-period.
+
+// Apple for ever! Achim Breidenbach 1997
+// e-mail: achim@boinx.com
+// http://www.boinx.com

@@ -1,0 +1,18 @@
+TODO :
+
+*Graphisme
+Marges
+SpeedUp pour l'affichage des characteres sous
+forme d'image et le masquage lors de update()
+Icones pour Pom1
+
+*Core
+Faire un debugger
+Fichier config pour le clavier
+
+*Applet
+Faire marcher Pom1Applet.java
+
+*Misc
+Ecrire quelques jeux
+2ksa

@@ -1,0 +1,7 @@
+// Pom1 Save : Program to print ASCII HEX equivalent of any keyboard character
+// Type 700R to execute
+
+0700: A9 8D 20 EF FF AD 11 D0 
+0708: 10 FB AD 10 D0 AA 20 EF 
+0710: FF A9 A0 20 EF FF 8A 20 
+0718: DC FF 4C 00 07 

@@ -1,0 +1,20 @@
+// This is the first programm on the Apple 1 from the
+// 'Section I - Getting The System Running' of
+// the Apple-1 Operation Manual. It was written by Steve Wozniak in 1976.
+
+0000: A9 00			// LDA #0
+0002: AA			// TAX
+0003: 20 EF FF			// JSR $FFEF  -> 'Echo' the accu
+0006: E8			// INX
+0007: 8A			// TXA
+0008: 4C 02 00			// JMP $0002  -> Next Character
+
+// Load this program by choosing the "Load Memory..."-item of the "File"-menu.
+// If there is an error while loading the error message will be displayed in
+// the Apple-1 monitor. Start the Program with "0 R" (which means "Go to $0000 and Run!")
+// It should print out all the characters of the computer.
+// You can only stop the program by reseting the cpu with command-period.
+
+// Apple for ever! Achim Breidenbach 1997
+// e-mail: achim@boinx.com
+// http://www.boinx.com
