@@ -1,5 +1,5 @@
 # SmartyKit Apple I - apple1
-SmartyKit Apple I replica drivers and software (http://apple1.smartykit.org).
+SmartyKit Apple I replica drivers and software (http://www.smartykit.io/).
 
 All needed libraries included in repository in /Arduino/libraries
 
