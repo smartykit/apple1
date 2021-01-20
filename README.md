@@ -11,3 +11,6 @@ Video driver uses Arduino TVout library.
 
 ## Software Emulator - POM 1
 POM 1 cross-platform emulator by Verhille Arnaud to test SmartyKit 1 ROM with software.
+
+## ROM Development – SmartyKit 1 ROM asm source and make file
+Easy-to-use development tool to write your own software for SmartyKLit 1 (you need just run make in your Terminal) and learn how ROM is organized.
