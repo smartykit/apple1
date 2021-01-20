@@ -14,3 +14,14 @@ POM 1 cross-platform emulator by Verhille Arnaud to test SmartyKit 1 ROM with so
 
 ## ROM Development – SmartyKit 1 ROM asm source and make file
 Easy-to-use development tool to write your own software for SmartyKLit 1 (you need just run make in your Terminal) and learn how ROM is organized.
+
+Here is an example:
+```bash
+SERGEYs-MacBook:ROM_development spanarin$ make
+SmartyKit 1: 6502 assembler & C-compiler to ROM (.bin)
+Assembling and linking...
+ca65 -l ROM_listing.asm SmartyKit1_ROM.asm
+ld65 -m ROM.map -o SmartyKit1_ROM.bin SmartyKit1_ROM.o -C apple1.cfg
+ld65 -o SmartyKit1_ROM_symon.bin SmartyKit1_ROM.o -C symon.cfg
+SERGEYs-MacBook:ROM_development spanarin$
+```
