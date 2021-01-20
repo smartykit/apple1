@@ -8,3 +8,6 @@ Keyboard driver uses Arduino PS2Keyboard library.
 
 ## Video Driver 
 Video driver uses Arduino TVout library.
+
+## Software Emulator - POM 1
+POM 1 cross-platform emulator by Verhille Arnaud to test SmartyKit 1 ROM with software.
