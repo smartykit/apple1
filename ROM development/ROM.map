@@ -1,13 +1,13 @@
 Modules list:
 -------------
 SmartyKit1_ROM.o:
-    CODE              Offs=000000  Size=000005  Align=00001  Fill=0000
-    PICTURE           Offs=000000  Size=00001A  Align=00001  Fill=0000
+    CODE              Offs=000000  Size=000001  Align=00001  Fill=0000
+    PICTURE           Offs=000000  Size=000008  Align=00001  Fill=0000
     C000              Offs=000000  Size=000001  Align=00001  Fill=0000
-    E000              Offs=000000  Size=000007  Align=00001  Fill=0000
+    E000              Offs=000000  Size=000001  Align=00001  Fill=0000
     F000              Offs=000000  Size=00024A  Align=00001  Fill=0000
     F800              Offs=000000  Size=00000B  Align=00001  Fill=0000
-    FA00              Offs=000000  Size=000122  Align=00001  Fill=0000
+    FA00              Offs=000000  Size=000149  Align=00001  Fill=0000
     FC00              Offs=000000  Size=0000B2  Align=00001  Fill=0000
     FD00              Offs=000000  Size=000037  Align=00001  Fill=0000
     FF00              Offs=000000  Size=0000FA  Align=00001  Fill=0000
@@ -18,13 +18,13 @@ Segment list:
 -------------
 Name                   Start     End    Size  Align
 ----------------------------------------------------
-PICTURE               000088  0000A1  00001A  00001
-CODE                  008000  008004  000005  00001
+PICTURE               000088  00008F  000008  00001
+CODE                  008000  008000  000001  00001
 C000                  00C000  00C000  000001  00001
-E000                  00E000  00E006  000007  00001
+E000                  00E000  00E000  000001  00001
 F000                  00F000  00F249  00024A  00001
 F800                  00F800  00F80A  00000B  00001
-FA00                  00FA00  00FB21  000122  00001
+FA00                  00FA00  00FB48  000149  00001
 FC00                  00FC00  00FCB1  0000B2  00001
 FD00                  00FD00  00FD36  000037  00001
 FF00                  00FF00  00FFF9  0000FA  00001

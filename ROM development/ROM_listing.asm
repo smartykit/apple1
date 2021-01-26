@@ -2,36 +2,36 @@ ca65 V2.19 - Git 0f4cb443
 Main file   : SmartyKit1_ROM.asm
 Current file: SmartyKit1_ROM.asm
 
-000000r 1                         .setcpu "6502"
 000000r 1                         .feature c_comments
+000000r 1               /*  SmartyKit 1 - ROM source
+000000r 1                *  http://www.smartykit.io/
+000000r 1                *  Copyright (C) 2020, Sergey Panarin <sergey@smartykit.io>
+000000r 1                *
+000000r 1                   This program is free software: you can redistribute it and/or modify
+000000r 1                   it under the terms of the GNU General Public License as published by
+000000r 1                   the Free Software Foundation, either version 3 of the License, or
+000000r 1                   (at your option) any later version.
+000000r 1                   This program is distributed in the hope that it will be useful,
+000000r 1                   but WITHOUT ANY WARRANTY; without even the implied warranty of
+000000r 1                   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+000000r 1                   GNU General Public License for more details.
+000000r 1                   You should have received a copy of the GNU General Public License
+000000r 1                   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+000000r 1               */
+000000r 1               
+000000r 1                         .setcpu "6502"
 000000r 1                         .segment "PICTURE"
-000000r 1  00                     .byte          %00000000
-000001r 1  66                     .byte          %01100110
-000002r 1  FF                     .byte          %11111111
-000003r 1  FF                     .byte          %11111111
-000004r 1  FF                     .byte          %11111111
-000005r 1  7E                     .byte          %01111110
-000006r 1  3C                     .byte          %00111100
-000007r 1  18                     .byte          %00011000
-000008r 1  00                     .byte 00
-000009r 1  00                     .byte 00
-00000Ar 1  3C 42 A5 81  Smiley:   .byte $3c, $42, $a5, $81, $a5, $99, $42, $3c
-00000Er 1  A5 99 42 3C  
-000012r 1  88 A8 50 07  Woz:      .byte $88, $a8, $50, $07, $61, $92, $94, $67
-000016r 1  61 92 94 67  
-00001Ar 1                       ;  .byte "8*8 Pixel Art picture end", $0d, $00
-00001Ar 1               
-00001Ar 1                         .code
-000000r 1  A9 12        loop:     lda #$12
-000002r 1  4C rr rr               jmp loop
-000005r 1               
-000005r 1                         .segment "C000"
+000000r 1  88 A8 50 07  Woz:      .byte $88, $a8, $50, $07, $61, $92, $94, $67
+000004r 1  61 92 94 67  
+000008r 1                       ;  .byte "8*8 Pixel Art picture end", $0d, $00
+000008r 1               
+000008r 1                         .code
+000000r 1  EA                     nop
+000001r 1                         .segment "C000"
 000000r 1  EA                     nop
 000001r 1                         .segment "E000"
-000000r 1  20 rr rr               JSR COPY_HEART
-000003r 1  4C 00 FC               JMP $FC00
-000006r 1  EA                     nop
-000007r 1                         .segment "F000"
+000000r 1  EA                     nop
+000001r 1                         .segment "F000"
 000000r 1                         ;Woz face
 000000r 1                         .include "Apple30th_Woz.asm"
 000000r 2               ;SYMBOLS_TABLE = $031D
@@ -563,7 +563,6 @@ Current file: SmartyKit1_ROM.asm
 00023Cr 2  20 70 72 6F  
 00024Ar 2               
 00024Ar 1               
-00024Ar 1               
 00024Ar 1                         .segment "F800"
 000000r 1                         ;Test from Apple-1 Operation Manual – printing all ASCII symbols in a loop
 000000r 1                         .include "TestFromManual.asm"
@@ -583,17 +582,17 @@ Current file: SmartyKit1_ROM.asm
 000000r 2               ;KBDCR           = $D011
 000000r 2               ;DSP             = $D012
 000000r 2               ;DSPCR           = $D013
-000000r 2               START_TEST = $EA
+000000r 2               ;START_TEST = $EA
 000000r 2               END_TEST = $EB
 000000r 2               
 000000r 2               
 000000r 2               LED_BLINKS = 5
-000000r 2               TEST1_REPEATS = 4
+000000r 2               TEST1_REPEATS = 8
 000000r 2               TEST2_REPEATS = 16
 000000r 2               TEST61_REPEATS = 8
 000000r 2               TEST62_REPEATS = 8
 000000r 2               TEST7_REPEATS = 16
-000000r 2               POSTOK_REPEATS = 4
+000000r 2               POSTOK_REPEATS = 8
 000000r 2               
 000000r 2               /*
 000000r 2               LED_BLINKS = 1
@@ -606,212 +605,209 @@ Current file: SmartyKit1_ROM.asm
 000000r 2               */
 000000r 2               
 000000r 2               
-000000r 2  EA           POST_START:		NOP
-000001r 2  A9 EA        				LDA #START_TEST
-000003r 2  8D 12 D0     			    STA DSP
-000006r 2               
-000006r 2  A9 01        				LDA #%00000001
-000008r 2  20 rr rr     				JSR BLINK
-00000Br 2               ;Test 1. Memory addresses decoder (blinking in cycle)
-00000Br 2  A2 04        MEM_DECODER: 	LDX #TEST1_REPEATS
-00000Dr 2  AD 00 FF     LOOPADDR:	 	LDA $FF00
-000010r 2  AD 00 E0     			    LDA $E000
-000013r 2  AD 00 D0     			    LDA $D000
-000016r 2  AD 00 C0     			    LDA $C000
-000019r 2  CA           			    DEX
-00001Ar 2  D0 F1        			    BNE LOOPADDR
-00001Cr 2               
-00001Cr 2  A9 02        			    LDA #%00000010
-00001Er 2  20 rr rr     				JSR BLINK
-000021r 2               ;Test 2. Ports decoder (blinking in cycle)
-000021r 2  A9 10        				LDA #TEST2_REPEATS
-000023r 2  AA           PORTS_DECODER:  TAX
-000024r 2  AC 10 D0     		        LDY KBD
-000027r 2  AC 11 D0     		        LDY KBDCR
-00002Ar 2  8E 12 D0     		        STX DSP
-00002Dr 2  2C 12 D0     		        BIT DSP
-000030r 2  CA           		        DEX
-000031r 2  8A           		        TXA
-000032r 2  D0 EF        		        BNE PORTS_DECODER
-000034r 2               
-000034r 2  A9 04        		        LDA #%00000100
-000036r 2  20 rr rr     				JSR BLINK
-000039r 2               ;Test 3. Testing writing to Video port (1->2->4->8->16->32->64->128->256->0)
-000039r 2  A9 01                		LDA #%00000001
-00003Br 2  8D 12 D0     VIDEO_PORT: 	STA DSP
-00003Er 2  0A                   		ASL A ;shifting 1 to the left
-00003Fr 2  D0 FA               			BNE VIDEO_PORT
-000041r 2               
-000041r 2  A9 08               			LDA #%00001000
-000043r 2  20 rr rr     				JSR BLINK
-000046r 2               ;Test 4. Testing writing to Video port via function call (256->128->64->32->16->8->4->2->1->0)
-000046r 2  20 rr rr     				JSR VIDEO_PORT2
-000049r 2               
-000049r 2               
-000049r 2  A9 10        				LDA #%00010000
-00004Br 2  20 rr rr     				JSR BLINK
-00004Er 2               ;Test 5. Testing RAM with write&read (writing TEST_SYMBOL and testing read for every 4Kb block in 32Kb RAM)
-00004Er 2               ;Total blocks tested is 8 (4*8 = 32)
-00004Er 2               TEST_SYMBOL = $3E
-00004Er 2               
-00004Er 2               /*
-00004Er 2               RAMTEST: 		CLD
-00004Er 2               		        LDX #$00
-00004Er 2               		        LDY #$00
-00004Er 2               
-00004Er 2               		        LDA #$FF
-00004Er 2               		        STA $00
-00004Er 2               		        LDA #$0F
-00004Er 2               		        STA $01
-00004Er 2               
-00004Er 2               RAMLOOP: 		LDA #TEST_SYMBOL
-00004Er 2               		        STA ($00),Y
-00004Er 2               		        LDA ($00),Y
-00004Er 2               		        CMP #TEST_SYMBOL
-00004Er 2               		        BNE ENDTEST
-00004Er 2               		        TXA
-00004Er 2               		        ASL A
-00004Er 2               		        ADC #$01
-00004Er 2               		        STA DSP
-00004Er 2               		        TAX
-00004Er 2               		        LDA $01
-00004Er 2               		        ADC #$10
-00004Er 2               		        STA $01
-00004Er 2               		        JMP RAMLOOP
-00004Er 2               
-00004Er 2               		        */
-00004Er 2               
-00004Er 2  A9 20        		        LDA #%00100000
-000050r 2  20 rr rr     				JSR BLINK
-000053r 2               ;Test 6. Testing BIT7 ports - keyboard and video
-000053r 2               BIT7MASK     = %10000000
-000053r 2               KBD7MASK     = %00000111
-000053r 2               DSP7MASK     = %00111111
-000053r 2               ;Test 6.1. Testing keyboard BIT7 port read (turn on 3 LEDs on the left and show BIT7 in the last LED)
-000053r 2               
-000053r 2  A2 08        KBDBIT7: 		LDX #TEST61_REPEATS
-000055r 2  A9 07        		        LDA #KBD7MASK
-000057r 2  8D 12 D0     		        STA DSP
-00005Ar 2               KBD7LOOP:
-00005Ar 2  AD 11 D0     		        LDA KBDCR
-00005Dr 2  29 80        		        AND #BIT7MASK
-00005Fr 2  09 07        		        ORA #KBD7MASK
-000061r 2  8D 12 D0     		        STA DSP
-000064r 2  CA           		        DEX
-000065r 2  D0 F3        		        BNE KBD7LOOP
-000067r 2               ;Test 6.2. Testing video BIT7 port read (turn on 6 LEDs on the left and show BIT7 in the last LED)
-000067r 2               
-000067r 2  A2 08        DSPBIT7: 		LDX #TEST62_REPEATS
-000069r 2  A9 3F        		        LDA #DSP7MASK
-00006Br 2  8D 12 D0     		        STA DSP
-00006Er 2               DSP7LOOP:
-00006Er 2  AD 12 D0     		        LDA DSP
-000071r 2  29 80        		        AND #BIT7MASK
-000073r 2  09 3F        		        ORA #DSP7MASK
-000075r 2  8D 12 D0     		        STA DSP
-000078r 2  CA           		        DEX
-000079r 2  D0 F3        		        BNE DSP7LOOP
-00007Br 2               
-00007Br 2               
-00007Br 2  A9 40        		        LDA #%01000000
-00007Dr 2  20 rr rr     				JSR BLINK
-000080r 2               ;Test 7. Testing keyboard port read and write to Video port
-000080r 2  A2 10        KBDTODSP: 		LDX #TEST7_REPEATS
-000082r 2  A9 00        		        LDA #$00
+000000r 2               POST_START:
+000000r 2               				;LDA #START_TEST
+000000r 2               			    ;STA DSP
+000000r 2  A9 01        				LDA #%00000001
+000002r 2  20 rr rr     				JSR BLINK
+000005r 2               ;Test 1. Memory addresses decoder (blinking in cycle)
+000005r 2  A2 08        MEM_DECODER: 	LDX #TEST1_REPEATS
+000007r 2  AD 00 FF     LOOPADDR:	 	LDA $FF00
+00000Ar 2  AD 00 E0     			    LDA $E000
+00000Dr 2  AD 00 D0     			    LDA $D000
+000010r 2  AD 00 C0     			    LDA $C000
+000013r 2  CA           			    DEX
+000014r 2  D0 F1        			    BNE LOOPADDR
+000016r 2               
+000016r 2  A9 02        			    LDA #%00000010
+000018r 2  20 rr rr     				JSR BLINK
+00001Br 2               ;Test 2. Ports decoder (blinking in cycle)
+00001Br 2  A9 10        				LDA #TEST2_REPEATS
+00001Dr 2  AA           PORTS_DECODER:  TAX
+00001Er 2  AC 10 D0     		        LDY KBD
+000021r 2  AC 11 D0     		        LDY KBDCR
+000024r 2  8E 12 D0     		        STX DSP
+000027r 2  2C 12 D0     		        BIT DSP
+00002Ar 2  CA           		        DEX
+00002Br 2  8A           		        TXA
+00002Cr 2  D0 EF        		        BNE PORTS_DECODER
+00002Er 2               
+00002Er 2  A9 04        		        LDA #%00000100
+000030r 2  20 rr rr     				JSR BLINK
+000033r 2               ;Test 3. Testing writing to Video port (1->2->4->8->16->32->64->128->256->0)
+000033r 2  A9 01                		LDA #%00000001
+000035r 2  8D 12 D0     VIDEO_PORT: 	STA DSP
+000038r 2  0A                   		ASL A ;shifting 1 to the left
+000039r 2  D0 FA               			BNE VIDEO_PORT
+00003Br 2               
+00003Br 2  A9 08               			LDA #%00001000
+00003Dr 2  20 rr rr     				JSR BLINK
+000040r 2               ;Test 4. Testing writing to Video port via function call (256->128->64->32->16->8->4->2->1->0)
+000040r 2  20 rr rr     				JSR VIDEO_PORT2
+000043r 2               
+000043r 2               
+000043r 2  A9 10        				LDA #%00010000
+000045r 2  20 rr rr     				JSR BLINK
+000048r 2               ;Test 5. Testing RAM with write&read (writing TEST_SYMBOL and testing read for every 4Kb block in 32Kb RAM)
+000048r 2               ;Total blocks tested is 8 (4*8 = 32)
+000048r 2               TEST_SYMBOL = $00
+000048r 2               
+000048r 2               
+000048r 2  D8           RAMTEST: 		CLD
+000049r 2  A2 00        		        LDX #$00
+00004Br 2  A0 00        		        LDY #$00
+00004Dr 2               
+00004Dr 2  A9 FF        		        LDA #$FF
+00004Fr 2  85 00        		        STA $00
+000051r 2  A9 0F        		        LDA #$0F
+000053r 2  85 01        		        STA $01
+000055r 2               
+000055r 2  A9 00        RAMLOOP: 		LDA #TEST_SYMBOL
+000057r 2  91 00        		        STA ($00),Y
+000059r 2  B1 00        		        LDA ($00),Y
+00005Br 2  C9 00        		        CMP #TEST_SYMBOL
+00005Dr 2  D0 11        		        BNE TEST_6
+00005Fr 2  8A           		        TXA
+000060r 2  0A           		        ASL A
+000061r 2  69 01        		        ADC #$01
+000063r 2  8D 12 D0     		        STA DSP
+000066r 2  AA           		        TAX
+000067r 2  A5 01        		        LDA $01
+000069r 2  69 10        		        ADC #$10
+00006Br 2  85 01        		        STA $01
+00006Dr 2  4C rr rr     		        JMP RAMLOOP
+000070r 2               
+000070r 2               
+000070r 2  EA           TEST_6:			NOP
+000071r 2  A9 20        		        LDA #%00100000
+000073r 2  20 rr rr     				JSR BLINK
+000076r 2               ;Test 6-7. Testing BIT7 ports - keyboard and video
+000076r 2               BIT7MASK     = %10000000
+000076r 2               KBD7MASK     = %00000111
+000076r 2               DSP7MASK     = %00111111
+000076r 2               ;Test 6. Testing keyboard BIT7 port read (turn on 3 LEDs on the left and show BIT7 in the last LED)
+000076r 2               
+000076r 2  A2 08        KBDBIT7: 		LDX #TEST61_REPEATS
+000078r 2  A9 07        		        LDA #KBD7MASK
+00007Ar 2  8D 12 D0     		        STA DSP
+00007Dr 2               KBD7LOOP:
+00007Dr 2  AD 11 D0     		        LDA KBDCR
+000080r 2  29 80        		        AND #BIT7MASK
+000082r 2  09 07        		        ORA #KBD7MASK
 000084r 2  8D 12 D0     		        STA DSP
-000087r 2               KBDDSPLOOP:
-000087r 2  AD 10 D0     		        LDA KBD
-00008Ar 2  8D 12 D0     		        STA DSP
-00008Dr 2  CA           		        DEX
-00008Er 2  D0 F7        		        BNE KBDDSPLOOP
-000090r 2               
-000090r 2               ;POST success and end
-000090r 2               
-000090r 2  A2 04        ENDPOST: 		LDX #POSTOK_REPEATS
-000092r 2               ENDLOOP:
-000092r 2  A9 55               			LDA #%01010101
-000094r 2  8D 12 D0     		        STA DSP
-000097r 2  EA           		        NOP
-000098r 2  EA           		        NOP
-000099r 2  A9 AA        		        LDA #%10101010
-00009Br 2  8D 12 D0     		        STA DSP
-00009Er 2  EA           		        NOP
-00009Fr 2  EA           		        NOP
+000087r 2  CA           		        DEX
+000088r 2  D0 F3        		        BNE KBD7LOOP
+00008Ar 2               
+00008Ar 2  A9 40        		        LDA #%01000000
+00008Cr 2  20 rr rr     				JSR BLINK
+00008Fr 2               ;Test 7. Testing video BIT7 port read (turn on 6 LEDs on the left and show BIT7 in the last LED)
+00008Fr 2  A2 08        DSPBIT7: 		LDX #TEST62_REPEATS
+000091r 2  A9 3F        		        LDA #DSP7MASK
+000093r 2  8D 12 D0     		        STA DSP
+000096r 2               DSP7LOOP:
+000096r 2  AD 12 D0     		        LDA DSP
+000099r 2  29 80        		        AND #BIT7MASK
+00009Br 2  09 3F        		        ORA #DSP7MASK
+00009Dr 2  8D 12 D0     		        STA DSP
 0000A0r 2  CA           		        DEX
-0000A1r 2  D0 EF        		        BNE ENDLOOP
+0000A1r 2  D0 F3        		        BNE DSP7LOOP
 0000A3r 2               
-0000A3r 2  EA           		        NOP
-0000A4r 2  EA           		        NOP
-0000A5r 2               
-0000A5r 2               ;printing ASCII table
-0000A5r 2  20 rr rr     		        JSR ASCII_ECHO
-0000A8r 2               
-0000A8r 2  EA           ENDTEST: 		NOP
-0000A9r 2  EA                   		NOP
-0000AAr 2  A9 EB                		LDA #END_TEST
-0000ACr 2  20 EF FF             		JSR ECHO 	;writing END_TEST to let video driver know that tests are over
-0000AFr 2               
-0000AFr 2  A2 00                		LDX #$00
-0000B1r 2               PRINT_MSG:
-0000B1r 2  BD rr rr     				LDA POSTCompletedText, X
-0000B4r 2  F0 07        				BEQ TO_WOZ_MON	;end printing at the end of the string (\n=0)
-0000B6r 2  20 EF FF     				JSR ECHO
-0000B9r 2  E8           				INX
-0000BAr 2  4C rr rr     				JMP PRINT_MSG
-0000BDr 2               
-0000BDr 2  4C 00 FF      TO_WOZ_MON:	JMP RESET	;start Woz Monitor (operating system)
-0000C0r 2               
-0000C0r 2               ;------------------------------------------------------
-0000C0r 2               ; POST subroutines
-0000C0r 2               ;------------------------------------------------------
-0000C0r 2               ;blinking LEDs in Video port
-0000C0r 2  A9 80        VIDEO_PORT2: 	LDA #%10000000
-0000C2r 2  8D 12 D0     TEST2:   		STA DSP
-0000C5r 2  4A                   		LSR A
-0000C6r 2  D0 FA                		BNE TEST2
-0000C8r 2  60                  			RTS
-0000C9r 2               
-0000C9r 2               ;blink with a LED in a position from A register
-0000C9r 2               TURN_OFF = %00000000
-0000C9r 2  A2 05        BLINK:			LDX #LED_BLINKS
-0000CBr 2  A8           				TAY	;save A
-0000CCr 2  98           NEXT_BLINK:		TYA ;restore A
-0000CDr 2  8D 12 D0     				STA DSP
-0000D0r 2  EA           				NOP
-0000D1r 2  EA           				NOP
-0000D2r 2  A9 00        				LDA #TURN_OFF
-0000D4r 2  8D 12 D0     				STA DSP
-0000D7r 2  EA           				NOP
-0000D8r 2  EA           				NOP
-0000D9r 2  CA           				DEX
-0000DAr 2  D0 F0        				BNE NEXT_BLINK
-0000DCr 2  60           				RTS
-0000DDr 2               
-0000DDr 2               ;printing visible symbols of ACSII table via ECHO function from Woz Monitor
-0000DDr 2               PRINT_ASCII:
-0000DDr 2  A0 20        			    LDY #32
-0000DFr 2  A2 5F        			    LDX #95 ;80 in hex = 127 in decimal
-0000E1r 2               ASCII_ECHO:
-0000E1r 2  2C 12 D0     			    BIT DSP
-0000E4r 2  30 FB        			    BMI ASCII_ECHO
-0000E6r 2  8C 12 D0     			    STY DSP
-0000E9r 2  C8           			    INY
-0000EAr 2  CA           			    DEX
-0000EBr 2  D0 F4        			    BNE ASCII_ECHO
-0000EDr 2  60           			    RTS
-0000EEr 2               
-0000EEr 2  2C 12 D0     CHAR_ECHO:	   	BIT DSP
-0000F1r 2  30 FB        			    BMI CHAR_ECHO
-0000F3r 2  8D 12 D0     			    STA DSP
-0000F6r 2  60           			    RTS
-0000F7r 2               
-0000F7r 2               POSTCompletedText:
-0000F7r 2  0D 0D 50 4F  	.byte $0d, $0d, "POST ok (v.1.0). SmartyKit 1 is ready.", $0d, $0d, $00
-0000FBr 2  53 54 20 6F  
-0000FFr 2  6B 20 28 76  
-000122r 2               
-000122r 1               
-000122r 1                          .segment "FC00"
+0000A3r 2  A9 80        		        LDA #%10000000
+0000A5r 2  20 rr rr     				JSR BLINK
+0000A8r 2               ;Test 8. Testing keyboard port read and write to Video port
+0000A8r 2  A2 10        KBDTODSP: 		LDX #TEST7_REPEATS
+0000AAr 2  A9 00        		        LDA #$00
+0000ACr 2  8D 12 D0     		        STA DSP
+0000AFr 2               KBDDSPLOOP:
+0000AFr 2  AD 10 D0     		        LDA KBD
+0000B2r 2  8D 12 D0     		        STA DSP
+0000B5r 2  CA           		        DEX
+0000B6r 2  D0 F7        		        BNE KBDDSPLOOP
+0000B8r 2               
+0000B8r 2               ;POST success and end
+0000B8r 2  A2 08        ENDPOST: 		LDX #POSTOK_REPEATS
+0000BAr 2               ENDLOOP:
+0000BAr 2  A9 55               			LDA #%01010101
+0000BCr 2  8D 12 D0     		        STA DSP
+0000BFr 2  EA           		        NOP
+0000C0r 2  EA           		        NOP
+0000C1r 2  A9 AA        		        LDA #%10101010
+0000C3r 2  8D 12 D0     		        STA DSP
+0000C6r 2  EA           		        NOP
+0000C7r 2  EA           		        NOP
+0000C8r 2  CA           		        DEX
+0000C9r 2  D0 EF        		        BNE ENDLOOP
+0000CBr 2               
+0000CBr 2               ;printing ASCII table
+0000CBr 2  20 rr rr     		        JSR PRINT_ASCII
+0000CEr 2               
+0000CEr 2  A9 EB        ENDTEST:        LDA #END_TEST
+0000D0r 2  20 EF FF             		JSR ECHO 	;writing END_TEST to let video driver know that tests are over
+0000D3r 2               
+0000D3r 2  A2 00                		LDX #$00
+0000D5r 2               PRINT_MSG:
+0000D5r 2  BD rr rr     				LDA POSTCompletedText, X
+0000D8r 2  F0 07        				BEQ QUIT_POST	;end printing at the end of the string (\n=0)
+0000DAr 2  20 EF FF     				JSR ECHO
+0000DDr 2  E8           				INX
+0000DEr 2  4C rr rr     				JMP PRINT_MSG
+0000E1r 2               
+0000E1r 2               
+0000E1r 2                QUIT_POST:
+0000E1r 2  20 rr rr      				JSR COPY_HEART ;writing Heart code picture to RAM
+0000E4r 2  4C 00 FF     				JMP RESET	;start Woz Monitor (operating system)
+0000E7r 2               
+0000E7r 2               ;------------------------------------------------------
+0000E7r 2               ; POST subroutines
+0000E7r 2               ;------------------------------------------------------
+0000E7r 2               ;blinking LEDs in Video port
+0000E7r 2  A9 80        VIDEO_PORT2: 	LDA #%10000000
+0000E9r 2  8D 12 D0     TEST2:   		STA DSP
+0000ECr 2  4A                   		LSR A
+0000EDr 2  D0 FA                		BNE TEST2
+0000EFr 2  60                  			RTS
+0000F0r 2               
+0000F0r 2               ;blink with a LED in a position from A register
+0000F0r 2               TURN_OFF = %00000000
+0000F0r 2  A2 05        BLINK:			LDX #LED_BLINKS
+0000F2r 2  A8           				TAY	;save A
+0000F3r 2  98           NEXT_BLINK:		TYA ;restore A
+0000F4r 2  8D 12 D0     				STA DSP
+0000F7r 2  EA           				NOP
+0000F8r 2  EA           				NOP
+0000F9r 2  A9 00        				LDA #TURN_OFF
+0000FBr 2  8D 12 D0     				STA DSP
+0000FEr 2  EA           				NOP
+0000FFr 2  EA           				NOP
+000100r 2  CA           				DEX
+000101r 2  D0 F0        				BNE NEXT_BLINK
+000103r 2  60           				RTS
+000104r 2               
+000104r 2               ;printing visible symbols of ACSII table via ECHO function from Woz Monitor
+000104r 2               PRINT_ASCII:
+000104r 2  A0 00        			    LDY #$00 ;starting symbol
+000106r 2  A2 80        			    LDX #$80 ;80 in hex = 127 in decimal
+000108r 2               ASCII_ECHO:
+000108r 2  2C 12 D0     			    BIT DSP
+00010Br 2  30 FB        			    BMI ASCII_ECHO
+00010Dr 2  8C 12 D0     			    STY DSP
+000110r 2  C8           			    INY
+000111r 2  CA           			    DEX
+000112r 2  D0 F4        			    BNE ASCII_ECHO
+000114r 2  60           			    RTS
+000115r 2               
+000115r 2  2C 12 D0     CHAR_ECHO:	   	BIT DSP
+000118r 2  30 FB        			    BMI CHAR_ECHO
+00011Ar 2  8D 12 D0     			    STA DSP
+00011Dr 2  60           			    RTS
+00011Er 2               
+00011Er 2               POSTCompletedText:
+00011Er 2  0D 0D 50 4F  	.byte $0d, $0d, "POST ok (v.1.0). SmartyKit 1 is ready.", $0d, $0d, $00
+000122r 2  53 54 20 6F  
+000126r 2  6B 20 28 76  
+000149r 2               
+000149r 1               
+000149r 1                          .segment "FC00"
 000000r 1                         ;printing 8x8 picture in the center with '*'
 000000r 1                         .include "8x8art.asm"
 000000r 2               ;printing 8x8 picture in the center with '*'
@@ -879,7 +875,7 @@ Current file: SmartyKit1_ROM.asm
 00005Br 2  68           				PLA
 00005Cr 2  60           				RTS
 00005Dr 2               ;from HeartPicture
-00005Dr 2               ;to PIC_ADDRESS ($88)
+00005Dr 2               ;to PIC_ADDRESS
 00005Dr 2  48           COPY_HEART:		PHA
 00005Er 2  8A           				TXA
 00005Fr 2  48           				PHA

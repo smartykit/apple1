@@ -63,7 +63,7 @@ NEXT_ROW:		PHA
 				PLA
 				RTS
 ;from HeartPicture
-;to PIC_ADDRESS ($88)
+;to PIC_ADDRESS
 COPY_HEART:		PHA
 				TXA
 				PHA

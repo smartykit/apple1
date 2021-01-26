@@ -2,17 +2,17 @@
 ;KBDCR           = $D011         
 ;DSP             = $D012        
 ;DSPCR           = $D013
-START_TEST = $EA
+;START_TEST = $EA
 END_TEST = $EB
 
 
 LED_BLINKS = 5
-TEST1_REPEATS = 4
+TEST1_REPEATS = 8
 TEST2_REPEATS = 16
 TEST61_REPEATS = 8
 TEST62_REPEATS = 8
 TEST7_REPEATS = 16
-POSTOK_REPEATS = 4
+POSTOK_REPEATS = 8
 
 /*
 LED_BLINKS = 1
@@ -25,10 +25,9 @@ POSTOK_REPEATS = 1
 */
 
 
-POST_START:		NOP
-				LDA #START_TEST
-			    STA DSP
-
+POST_START:		
+				;LDA #START_TEST
+			    ;STA DSP
 				LDA #%00000001
 				JSR BLINK
 ;Test 1. Memory addresses decoder (blinking in cycle)
@@ -71,9 +70,9 @@ VIDEO_PORT: 	STA DSP
 				JSR BLINK
 ;Test 5. Testing RAM with write&read (writing TEST_SYMBOL and testing read for every 4Kb block in 32Kb RAM)
 ;Total blocks tested is 8 (4*8 = 32)
-TEST_SYMBOL = $3E
+TEST_SYMBOL = $00
 
-/*
+
 RAMTEST: 		CLD
 		        LDX #$00
 		        LDY #$00
@@ -87,7 +86,7 @@ RAMLOOP: 		LDA #TEST_SYMBOL
 		        STA ($00),Y
 		        LDA ($00),Y
 		        CMP #TEST_SYMBOL
-		        BNE ENDTEST
+		        BNE TEST_6
 		        TXA
 		        ASL A
 		        ADC #$01
@@ -98,15 +97,15 @@ RAMLOOP: 		LDA #TEST_SYMBOL
 		        STA $01
 		        JMP RAMLOOP
 
-		        */
-
+		        
+TEST_6:			NOP
 		        LDA #%00100000
 				JSR BLINK
-;Test 6. Testing BIT7 ports - keyboard and video 
+;Test 6-7. Testing BIT7 ports - keyboard and video 
 BIT7MASK     = %10000000
 KBD7MASK     = %00000111
 DSP7MASK     = %00111111
-;Test 6.1. Testing keyboard BIT7 port read (turn on 3 LEDs on the left and show BIT7 in the last LED)
+;Test 6. Testing keyboard BIT7 port read (turn on 3 LEDs on the left and show BIT7 in the last LED)
 
 KBDBIT7: 		LDX #TEST61_REPEATS
 		        LDA #KBD7MASK
@@ -118,8 +117,10 @@ KBD7LOOP:
 		        STA DSP
 		        DEX
 		        BNE KBD7LOOP
-;Test 6.2. Testing video BIT7 port read (turn on 6 LEDs on the left and show BIT7 in the last LED)
 
+		        LDA #%01000000
+				JSR BLINK
+;Test 7. Testing video BIT7 port read (turn on 6 LEDs on the left and show BIT7 in the last LED)
 DSPBIT7: 		LDX #TEST62_REPEATS
 		        LDA #DSP7MASK
 		        STA DSP
@@ -131,10 +132,9 @@ DSP7LOOP:
 		        DEX
 		        BNE DSP7LOOP
 
-
-		        LDA #%01000000
+		        LDA #%10000000
 				JSR BLINK
-;Test 7. Testing keyboard port read and write to Video port
+;Test 8. Testing keyboard port read and write to Video port
 KBDTODSP: 		LDX #TEST7_REPEATS
 		        LDA #$00
 		        STA DSP
@@ -145,7 +145,6 @@ KBDDSPLOOP:
 		        BNE KBDDSPLOOP		        
 
 ;POST success and end
-
 ENDPOST: 		LDX #POSTOK_REPEATS
 ENDLOOP:
        			LDA #%01010101
@@ -159,26 +158,24 @@ ENDLOOP:
 		        DEX
 		        BNE ENDLOOP   
 
-		        NOP
-		        NOP     
-
 ;printing ASCII table
-		        JSR ASCII_ECHO 
+		        JSR PRINT_ASCII 
 
-ENDTEST: 		NOP
-        		NOP
-        		LDA #END_TEST
+ENDTEST:        LDA #END_TEST
         		JSR ECHO 	;writing END_TEST to let video driver know that tests are over
 				
         		LDX #$00
 PRINT_MSG:
 				LDA POSTCompletedText, X
-				BEQ TO_WOZ_MON	;end printing at the end of the string (\n=0)
+				BEQ QUIT_POST	;end printing at the end of the string (\n=0)
 				JSR ECHO
 				INX
 				JMP PRINT_MSG
 
- TO_WOZ_MON:	JMP RESET	;start Woz Monitor (operating system)
+
+ QUIT_POST:		
+ 				JSR COPY_HEART ;writing Heart code picture to RAM
+				JMP RESET	;start Woz Monitor (operating system)
 
 ;------------------------------------------------------
 ; POST subroutines
@@ -208,8 +205,8 @@ NEXT_BLINK:		TYA ;restore A
 
 ;printing visible symbols of ACSII table via ECHO function from Woz Monitor
 PRINT_ASCII:
-			    LDY #32
-			    LDX #95 ;80 in hex = 127 in decimal    
+			    LDY #$00 ;starting symbol
+			    LDX #$80 ;80 in hex = 127 in decimal    
 ASCII_ECHO:
 			    BIT DSP         
 			    BMI ASCII_ECHO
