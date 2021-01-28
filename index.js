@@ -113,5 +113,3 @@ function updateOut(redraw) {
     document.getElementById("out").innerText = hexString;
 
 }
-
-main();
