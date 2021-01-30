@@ -113,3 +113,7 @@ function updateOut(redraw) {
     document.getElementById("out").innerText = hexString;
 
 }
+function startDrawing()
+{
+    alert("Start drawing");
+}
