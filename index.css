@@ -1,0 +1,53 @@
+#m-line {
+    display: flex;
+}
+
+#hexLabels {
+    margin-left: 20px;
+}
+
+#open {
+    margin-left: 20px;
+}
+
+#addFrame {
+    margin-left: 20px;
+}
+
+#anim {
+    word-wrap: break-word;
+}
+
+
+.cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+}
+
+.cell-active {
+    background-color: orange;
+}
+
+.row {
+    display: flex;
+}
+
+.binLabel {
+    height: 40px;
+    border: 1px solid black;
+    width: 85px;
+}
+
+.hexLabel {
+    height: 40px;
+    border: 1px solid black;
+    width: 40px;
+}
+
+.label-p {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+    padding-top: 11px;
+}
