@@ -25,3 +25,16 @@ ld65 -m ROM.map -o SmartyKit1_ROM.bin SmartyKit1_ROM.o -C apple1.cfg
 ld65 -o SmartyKit1_ROM_symon.bin SmartyKit1_ROM.o -C symon.cfg
 SERGEYs-MacBook:ROM_development spanarin$
 ```
+
+## SmartyKit 8x8 Pixel Art online tool for program at $FC00 in ROM (FC00R command)
+You could draw your own pixel art using our online tool (https://smartykit.io/instructions/pixelart), get the code for this image and load this code it to SmartyKit (or emulator) memory using command:
+```
+1111: 3C 42 A5 81 A5 99 42 3C (Return)
+FC00R (Return)
+```
+
+Here is an example of how it works in emulator:
+
+![SmartyKit 8x8 Pixel Art online tool]
+(https://raw.githubusercontent.com/smartykit/apple1/master/SmartyKit%20Pixel%20Art%20example.png)
+
