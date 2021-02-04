@@ -41,4 +41,7 @@ FC00R (Return)
 
 Here is an example of how it works in emulator:
 
+[![Video to-do](https://j.gifs.com/2xjPxP.gif)](https://youtu.be/1KdQEKLvOHM)
+
+And a screenshot:
 ![SmartyKit 8x8 Pixel Art online tool](https://raw.githubusercontent.com/smartykit/apple1/master/SmartyKit%20Pixel%20Art%20example.png)
