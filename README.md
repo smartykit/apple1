@@ -48,7 +48,8 @@ And a screenshot:
 
 ## SmartyKit plates for breadboards
 
-PCB version (black) and Wooden version
-!(https://github.com/smartykit/apple1/blob/01ea2ec54a94a7a31ee613f007602f0c08cb13ae/SmartyKit-plates.jpeg)
+PCB version (black) and Wooden version (file for wood laser cutter: [download](https://github.com/smartykit/apple1/blob/01ea2ec54a94a7a31ee613f007602f0c08cb13ae/SmartyKit-Plate-for-breadboards(laser-cut).cdr?raw=true))
 
-File for wood laser cutter: [Download](https://github.com/smartykit/apple1/blob/01ea2ec54a94a7a31ee613f007602f0c08cb13ae/SmartyKit-Plate-for-breadboards(laser-cut).cdr) 
+![SmartyKit Plates](https://raw.githubusercontent.com/smartykit/apple1/master/SmartyKit-plates.jpeg)
+
+
