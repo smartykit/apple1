@@ -45,3 +45,10 @@ Here is an example of how it works in emulator:
 
 And a screenshot:
 ![SmartyKit 8x8 Pixel Art online tool](https://raw.githubusercontent.com/smartykit/apple1/master/SmartyKit%20Pixel%20Art%20example.png)
+
+## SmartyKit plates for breadboards
+
+PCB version (black) and Wooden version
+!(https://github.com/smartykit/apple1/blob/01ea2ec54a94a7a31ee613f007602f0c08cb13ae/SmartyKit-plates.jpeg)
+
+File for wood laser cutter: [Download](https://github.com/smartykit/apple1/blob/01ea2ec54a94a7a31ee613f007602f0c08cb13ae/SmartyKit-Plate-for-breadboards(laser-cut).cdr) 
