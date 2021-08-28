@@ -1,4 +1,5 @@
- /*  SmartyKit 1 - PS/2 keyboard driver
+ /*  SmartyKit 1 - PS/2 keyboard driver v.1.1
+ *  (with automatic mode if no PS/2 keyboard is connected)
  *  http://www.smartykit.io/ 
  *  Copyright (C) 2020, Sergey Panarin <sergey@smartykit.io>
  *  
@@ -34,6 +35,8 @@ const int PS2Socket_Clk = 4;
 const int KeyboardBIT7pin =  5; // 
 const int DataBus[8] = {6, 7, 8, 9, 10, 11, 12, 13};
 static boolean BIT7flag = false;
+static boolean autoMode = true; //run pre-set command or wait for user input from PS/2 keyboard
+static boolean autoCommandSent = false; // run pre-set command only once after reboot of Keyboard controller
 
 //low-rate clock for tests on A4-A5
 #define CLOCK A4
@@ -60,7 +63,10 @@ void setup()
   pinMode(KeyboardBIT7pin, OUTPUT); 
   KeyboardBIT7_Disable();
   
-  delay(500); //7500 for debug without Keyboard connected
+  if (autoMode)
+    delay(7500); //for start without Keyboard connected
+  else
+    delay(500);
 
 #ifdef _WITH_PS2_
   keyboard.begin(PS2Socket_Clk, PS2Socket_Data);
@@ -107,6 +113,13 @@ void sendCharToKeyboardPort(char c)
 
 void loop() { 
 
+  //run pre-set command in auto-mode when PS/2 keyboard is not connected
+  //only once after reboot of Keyboard controller 
+  if (autoMode && !autoCommandSent)
+  {
+    autoCommandSent = true;
+    runAutoModeCommand();
+  }
 
 #ifdef _WITH_PS2_
   //check PS2 input
@@ -114,7 +127,7 @@ void loop() {
     char c = keyboard.read();
 
     if (c == PS2_TAB)  
-      preLoadTest();
+      runCommand();
     
     //process Backspace, Left Arrow, Delete as Apple I backspace '_'
     if (c == PS2_BACKSPACE) {
@@ -126,8 +139,9 @@ void loop() {
     }
 
     int scan_code = (int)c;
-    //make all symbols uppercase
-    if (scan_code >= 0x60)
+    //make all symbols uppercase (from 'a' (ASCII code 0x61) to 'z' (ASCII code 0x7A))
+    //as in original Apple-1
+     if (scan_code >= 0x61 && scan_code <= 0x7A)
       scan_code -= 0x20;
     c = (char) scan_code;
     //print c to Keyboard Port to be read by CPU
@@ -149,7 +163,21 @@ void loop() {
   delay(lowRateClockPeriod);                       // wait for a lowRateClockPeriod
 }
 
-void preLoadTest()
+//running pre-set Woz OS command for auto mode
+void runAutoModeCommand()
+{
+  const int CMD_COUNT = 1;
+  String cmd1 = String("F000R\r"); // Woz face demo program at $F000 
+  String commands[] = {cmd1};
+  for (int i = 0; i < CMD_COUNT; i++)
+    for (int j = 0; j < commands[i].length(); j++)
+    {
+      char c = commands[i].charAt(j);
+      sendCharToKeyboardPort(c);
+    }
+}
+//running pre-set Woz OS command (drawing 8x8 pixel art)
+void runCommand()
 {
   const int CMD_COUNT = 4;
   String cmd1 = String("1111: 88 A8 50\r");
