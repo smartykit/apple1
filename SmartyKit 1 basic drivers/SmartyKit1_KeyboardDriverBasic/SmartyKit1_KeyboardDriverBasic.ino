@@ -28,7 +28,7 @@
 // A5 -> Low-rate clock output for indicating LED connection 
 
 #define PS2KEYBOARDCLOCK_PIN  2
-#define CPU_READSKEYBOARD_PIN 3
+#define KEYBOARD_RD_PIN       3
 #define PS2KEYBOARD_DATA_PIN  4
 #define KEYBOARD_BIT7_PIN     5 
 
@@ -56,11 +56,11 @@ void setup()
   pinMode(LORATE_CLOCK_PIN, OUTPUT);
   pinMode(LORATE_CLOCK_LED_PIN, OUTPUT);
 
-  pinMode(CPU_READSKEYBOARD_PIN, INPUT_PULLUP); 
+  pinMode(KEYBOARD_RD_PIN, INPUT_PULLUP); 
   
   for (int bit = 0; bit < 8; bit++) {
     pinMode(KeyboardPort[bit], OUTPUT); 
-  };
+  }
   pinMode(KEYBOARD_BIT7_PIN, OUTPUT); 
   KeyboardBIT7_Disable();
   
@@ -73,12 +73,12 @@ void setup()
   keyboard.begin(PS2KEYBOARD_DATA_PIN, PS2KEYBOARDCLOCK_PIN);
   keyboard.echo();
 #endif
-  attachInterrupt(1, cpuReadsKeyboard, FALLING); 
+  attachInterrupt(digitalPinToInterrupt(KEYBOARD_RD_PIN), cpuReadsKeyboard, FALLING); 
 
 #ifdef _WITH_SERIAL_
   Serial.begin(9600);
   Serial.println("SmartyKit 1 Serial Keyboard is ready...");
- #endif
+#endif
 }
 
 void cpuReadsKeyboard(void)
@@ -100,7 +100,7 @@ void KeyboardBIT7_Disable()
 
 void sendCharToKeyboardPort(char c)
 {
-  while(BIT7flag == true) //wait untill the previous char is read by CPU
+  while (BIT7flag == true) //wait untill the previous char is read by CPU
     delay(5);
     
   for (int bit = 0; bit < 8 ; bit++) 
@@ -128,7 +128,7 @@ void loop() {
   //check PS2 input
   if (keyboard.available()) {
     uint16_t scan_code = keyboard.read();
-    char c = scan_code & 0xff;
+    byte c = scan_code & 0xff;
 
     if (c == PS2_KEY_TAB)  
       runCommand();
