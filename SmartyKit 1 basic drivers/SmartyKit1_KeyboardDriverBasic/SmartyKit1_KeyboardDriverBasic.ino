@@ -15,7 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "PS2Keyboard.h"
+#include <PS2KeyAdvanced.h>
 
 // Keyboard Driver pins connections:
 // D0 & D1 – reserved for Serial connection
@@ -27,40 +27,41 @@
 // A4 -> Low-rate clock output for CPU CLK input
 // A5 -> Low-rate clock output for indicating LED connection 
 
-const int PS2Socket_Data =  2;
-const int CPUreadsKeyboardPin = 3;
-const int PS2Socket_Clk = 4;
+#define PS2KEYBOARDCLOCK_PIN  2
+#define CPU_READSKEYBOARD_PIN 3
+#define PS2KEYBOARD_DATA_PIN  4
+#define KEYBOARD_BIT7_PIN     5 
 
-
-const int KeyboardBIT7pin =  5; // 
-const int DataBus[8] = {6, 7, 8, 9, 10, 11, 12, 13};
+const int KeyboardPort[8] = {6, 7, 8, 9, 10, 11, 12, 13};
 static boolean BIT7flag = false;
-static boolean autoMode = true; //run pre-set command or wait for user input from PS/2 keyboard
+static boolean autoMode = false; //run pre-set command or wait for user input from PS/2 keyboard
 static boolean autoCommandSent = false; // run pre-set command only once after reboot of Keyboard controller
 
 //low-rate clock for tests on A4-A5
-#define CLOCK A4
-#define LED A5
-int lowRateClockPeriod = 10; //10 milliseconds = 100 times per second (100 Hz)
+#define LORATE_CLOCK_PIN A4
+#define LORATE_CLOCK_LED_PIN A5
+
+//10 milliseconds = 100 times per second (100 Hz)
+#define LORATE_CLOCK_PERIOD_MILLIS 10 
 
 //#define _WITH_SERIAL_
 #define _WITH_PS2_
 
 #ifdef _WITH_PS2_
-PS2Keyboard keyboard;
+PS2KeyAdvanced keyboard;
 #endif
 
 void setup()
 {
-  pinMode(CLOCK, OUTPUT);
-  pinMode(LED, OUTPUT);
+  pinMode(LORATE_CLOCK_PIN, OUTPUT);
+  pinMode(LORATE_CLOCK_LED_PIN, OUTPUT);
 
-  pinMode(CPUreadsKeyboardPin, INPUT_PULLUP); 
+  pinMode(CPU_READSKEYBOARD_PIN, INPUT_PULLUP); 
   
-   for (int count = 1; count <= 8; count++) {
-    pinMode(DataBus[count-1], OUTPUT); 
+  for (int bit = 0; bit < 8; bit++) {
+    pinMode(KeyboardPort[bit], OUTPUT); 
   };
-  pinMode(KeyboardBIT7pin, OUTPUT); 
+  pinMode(KEYBOARD_BIT7_PIN, OUTPUT); 
   KeyboardBIT7_Disable();
   
   if (autoMode)
@@ -69,7 +70,8 @@ void setup()
     delay(500);
 
 #ifdef _WITH_PS2_
-  keyboard.begin(PS2Socket_Clk, PS2Socket_Data);
+  keyboard.begin(PS2KEYBOARD_DATA_PIN, PS2KEYBOARDCLOCK_PIN);
+  keyboard.echo();
 #endif
   attachInterrupt(1, cpuReadsKeyboard, FALLING); 
 
@@ -86,12 +88,13 @@ void cpuReadsKeyboard(void)
 
 void KeyboardBIT7_Enable()
 {
-  digitalWrite(KeyboardBIT7pin, HIGH);
+  digitalWrite(KEYBOARD_BIT7_PIN, HIGH);
   BIT7flag = true;
 }
+
 void KeyboardBIT7_Disable()
 {
-  digitalWrite(KeyboardBIT7pin, LOW);
+  digitalWrite(KEYBOARD_BIT7_PIN, LOW);
   BIT7flag = false;
 }
 
@@ -100,14 +103,14 @@ void sendCharToKeyboardPort(char c)
   while(BIT7flag == true) //wait untill the previous char is read by CPU
     delay(5);
     
-  for (int count = 1; count <= 8 ; count++) 
+  for (int bit = 0; bit < 8 ; bit++) 
   {
-     if (c & (1 << (count-1))) 
-        digitalWrite(DataBus[count-1], HIGH);
+      if (c & (1 << (bit))) 
+        digitalWrite(KeyboardPort[bit], HIGH);
       else
-        digitalWrite(DataBus[count-1], LOW);
+        digitalWrite(KeyboardPort[bit], LOW);
   }
-  digitalWrite(DataBus[7], HIGH);
+  digitalWrite(KeyboardPort[7], HIGH);
   KeyboardBIT7_Enable(); 
 }
 
@@ -124,26 +127,24 @@ void loop() {
 #ifdef _WITH_PS2_
   //check PS2 input
   if (keyboard.available()) {
-    char c = keyboard.read();
+    uint16_t scan_code = keyboard.read();
+    char c = scan_code & 0xff;
 
-    if (c == PS2_TAB)  
+    if (c == PS2_KEY_TAB)  
       runCommand();
     
     //process Backspace, Left Arrow, Delete as Apple I backspace '_'
-    if (c == PS2_BACKSPACE) {
+    if (c == PS2_KEY_BACK) {
       c = '_';
-    } else if (c == PS2_LEFTARROW) {
+    } else if (c == PS2_KEY_L_ARROW) {
        c = '_';
-    } else if (c == PS2_DELETE) {
+    } else if (c == PS2_KEY_DELETE) {
       c = '_';
     }
 
-    int scan_code = (int)c;
     //make all symbols uppercase (from 'a' (ASCII code 0x61) to 'z' (ASCII code 0x7A))
     //as in original Apple-1
-     if (scan_code >= 0x61 && scan_code <= 0x7A)
-      scan_code -= 0x20;
-    c = (char) scan_code;
+    c = toupper(c);
     //print c to Keyboard Port to be read by CPU
     sendCharToKeyboardPort(c);
     #ifdef _WITH_SERIAL_
@@ -155,12 +156,12 @@ void loop() {
 #endif
 
   //low-rate clock
-  digitalWrite(CLOCK, HIGH);
-  digitalWrite(LED, HIGH);
-  delay(lowRateClockPeriod);                       // wait for a lowRateClockPeriod
-  digitalWrite(CLOCK, LOW);
-  digitalWrite(LED, LOW);    
-  delay(lowRateClockPeriod);                       // wait for a lowRateClockPeriod
+  digitalWrite(LORATE_CLOCK_PIN, HIGH);
+  digitalWrite(LORATE_CLOCK_LED_PIN, HIGH);
+  delay(LORATE_CLOCK_PERIOD_MILLIS);                       // wait for a LORATE_CLOCK_PERIOD_MILLIS
+  digitalWrite(LORATE_CLOCK_PIN, LOW);
+  digitalWrite(LORATE_CLOCK_LED_PIN, LOW);    
+  delay(LORATE_CLOCK_PERIOD_MILLIS);                       // wait for a LORATE_CLOCK_PERIOD_MILLIS
 }
 
 //running pre-set Woz OS command for auto mode
