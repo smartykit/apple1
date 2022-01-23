@@ -42,14 +42,9 @@ static boolean autoCommandSent = false; // run pre-set command only once after r
 #define LORATE_CLOCK_LED_PIN A5
 
 //10 milliseconds = 100 times per second (100 Hz)
-#define LORATE_CLOCK_PERIOD_MILLIS 10 
+#define LORATE_CLOCK_PERIOD_MILLIS 100
 
-//#define _WITH_SERIAL_
-#define _WITH_PS2_
-
-#ifdef _WITH_PS2_
 PS2KeyAdvanced keyboard;
-#endif
 
 void setup()
 {
@@ -62,47 +57,60 @@ void setup()
     pinMode(KeyboardPort[bit], OUTPUT); 
   }
   pinMode(KEYBOARD_BIT7_PIN, OUTPUT); 
-  KeyboardBIT7_Disable();
-  
+  ClearKeyboardBIT7();
+
+  Serial.begin(9600);
+  Serial.println("SmartyKit 1 PS2 Keyboard is ready...");
+
   if (autoMode)
     delay(7500); //for start without Keyboard connected
   else
     delay(500);
 
-#ifdef _WITH_PS2_
   keyboard.begin(PS2KEYBOARD_DATA_PIN, PS2KEYBOARDCLOCK_PIN);
   keyboard.echo();
-#endif
-  attachInterrupt(digitalPinToInterrupt(KEYBOARD_RD_PIN), cpuReadsKeyboard, FALLING); 
+  delay( 6 );
+  uint16_t scan_code = keyboard.read( );
 
-#ifdef _WITH_SERIAL_
-  Serial.begin(9600);
-  Serial.println("SmartyKit 1 Serial Keyboard is ready...");
-#endif
+  if( (scan_code & 0xff) == PS2_KEY_ECHO || (scan_code & 0xff) == PS2_KEY_BAT || (scan_code & 0xff) == 0xe8 )
+    Serial.println( "Keyboard OK.." );    // Response was Echo or power up
+  else
+    if ((scan_code & 0xff) == 0)
+    {
+      Serial.println( "Keyboard Not Found" );
+    }
+    else
+    {
+      Serial.print( "Invalid Code received of " );
+      Serial.println(scan_code, HEX);
+    }
+
+  attachInterrupt(digitalPinToInterrupt(KEYBOARD_RD_PIN), cpuReadsKeyboard, FALLING); 
 }
 
 void cpuReadsKeyboard(void)
 {
-  KeyboardBIT7_Disable();
+  ClearKeyboardBIT7();
 }
 
-void KeyboardBIT7_Enable()
+void SetKeyboardBIT7()
 {
   digitalWrite(KEYBOARD_BIT7_PIN, HIGH);
   BIT7flag = true;
 }
 
-void KeyboardBIT7_Disable()
+void ClearKeyboardBIT7()
 {
   digitalWrite(KEYBOARD_BIT7_PIN, LOW);
   BIT7flag = false;
 }
 
 void sendCharToKeyboardPort(char c)
-{
-  while (BIT7flag == true) //wait untill the previous char is read by CPU
-    delay(5);
-    
+{  
+    Serial.print(c); 
+    if (c == '\r')
+      Serial.println();
+
   for (int bit = 0; bit < 8 ; bit++) 
   {
       if (c & (1 << (bit))) 
@@ -111,11 +119,11 @@ void sendCharToKeyboardPort(char c)
         digitalWrite(KeyboardPort[bit], LOW);
   }
   digitalWrite(KeyboardPort[7], HIGH);
-  KeyboardBIT7_Enable(); 
+  SetKeyboardBIT7(); 
 }
 
-void loop() { 
-
+void loop() 
+{ 
   //run pre-set command in auto-mode when PS/2 keyboard is not connected
   //only once after reboot of Keyboard controller 
   if (autoMode && !autoCommandSent)
@@ -124,36 +132,34 @@ void loop() {
     runAutoModeCommand();
   }
 
-#ifdef _WITH_PS2_
   //check PS2 input
-  if (keyboard.available()) {
+  if (!BIT7flag && keyboard.available()) 
+  {
     uint16_t scan_code = keyboard.read();
-    byte c = scan_code & 0xff;
+       
+    if (!( scan_code & PS2_BREAK ))
+    {
+      char c = scan_code & 0xff;
 
-    if (c == PS2_KEY_TAB)  
-      runCommand();
-    
-    //process Backspace, Left Arrow, Delete as Apple I backspace '_'
-    if (c == PS2_KEY_BACK) {
-      c = '_';
-    } else if (c == PS2_KEY_L_ARROW) {
-       c = '_';
-    } else if (c == PS2_KEY_DELETE) {
-      c = '_';
+      if (c == PS2_KEY_TAB)  
+        runCommand();
+      
+      //process Backspace, Left Arrow, Delete as Apple I backspace '_'
+      if (c == PS2_KEY_BACK) {
+        c = '_';
+      } else if (c == PS2_KEY_L_ARROW) {
+        c = '_';
+      } else if (c == PS2_KEY_DELETE) {
+        c = '_';
+      }
+
+      //make all symbols uppercase (from 'a' (ASCII code 0x61) to 'z' (ASCII code 0x7A))
+      //as in original Apple-1
+      c = toupper(c);
+      //print c to Keyboard Port to be read by CPU
+      sendCharToKeyboardPort(c);
     }
-
-    //make all symbols uppercase (from 'a' (ASCII code 0x61) to 'z' (ASCII code 0x7A))
-    //as in original Apple-1
-    c = toupper(c);
-    //print c to Keyboard Port to be read by CPU
-    sendCharToKeyboardPort(c);
-    #ifdef _WITH_SERIAL_
-    Serial.print(c);
-    if (c == '\r')
-      Serial.println();
-    #endif
   }
-#endif
 
   //low-rate clock
   digitalWrite(LORATE_CLOCK_PIN, HIGH);
@@ -167,10 +173,10 @@ void loop() {
 //running pre-set Woz OS command for auto mode
 void runAutoModeCommand()
 {
-  const int CMD_COUNT = 1;
+  const int cmd_count = 1;
   String cmd1 = String("F000R\r"); // Woz face demo program at $F000 
   String commands[] = {cmd1};
-  for (int i = 0; i < CMD_COUNT; i++)
+  for (int i = 0; i < cmd_count; i++)
     for (int j = 0; j < commands[i].length(); j++)
     {
       char c = commands[i].charAt(j);
@@ -180,17 +186,16 @@ void runAutoModeCommand()
 //running pre-set Woz OS command (drawing 8x8 pixel art)
 void runCommand()
 {
-  const int CMD_COUNT = 4;
+  const int cmd_count = 4;
   String cmd1 = String("1111: 88 A8 50\r");
   String cmd2 = String(":07 61 92\r");
   String cmd3 = String(":94 67\r");
   String cmd4 = String("FC00R\r");
   String commands[] = {cmd1, cmd2, cmd3, cmd4};
-  for (int i = 0; i < CMD_COUNT; i++)
+  for (int i = 0; i < cmd_count; i++)
     for (int j = 0; j < commands[i].length(); j++)
     {
       char c = commands[i].charAt(j);
       sendCharToKeyboardPort(c);
     }
-  
 }
