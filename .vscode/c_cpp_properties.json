@@ -19,6 +19,7 @@
                 "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino",
                 "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/variants/standard",
                 "/Users/gharker/Documents/Arduino/libraries/PS2KeyAdvanced/src",
+                "/Users/gharker/Documents/Arduino/libraries/PS2KeyMap/src",
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
                 "/Applications/Arduino.app/Contents/Java/hardware/tools/avr/avr/include"

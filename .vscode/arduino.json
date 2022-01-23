@@ -2,5 +2,5 @@
     "board": "arduino:avr:uno",
     "programmer": "arduino:avrispmkii",
     "sketch": "SmartyKit 1 basic drivers/SmartyKit1_KeyboardDriverBasic/SmartyKit1_KeyboardDriverBasic.ino",
-    "port": "/dev/cu.usbmodem2101"
+    "port": "/dev/cu.usbserial-FTBXSR3D"
 }
