@@ -4,10 +4,10 @@ SmartyKit Apple I replica drivers and software (http://www.smartykit.io/).
 All needed libraries included in repository in /Arduino/libraries
 
 ## Keyboard Driver
-Keyboard driver uses Arduino PS2Keyboard library.
+Keyboard driver uses Arduino PS2KeyAdvanced library.
 
 ## Video Driver 
-Video driver uses Arduino TVout library.
+Video driver uses Arduino custom 2.8" TFT screen driver (based on Adafruit driver) and TV Terminal library.
 
 ## Software Emulator - POM 1
 POM 1 cross-platform emulator by Verhille Arnaud to test SmartyKit 1 ROM with software.
