@@ -19,12 +19,11 @@
 
 #include <SPI.h>
 
-
-#include <Terminal.h>
 #undef _TERMINAL_ //turn off Terminal
 //#define _TERMINAL_ //turn on Terminal
 
 #ifdef _TERMINAL_
+#include <Terminal.h>
 // Create a terminal in TWI mode
 Terminal term; //uses A4 (SDA) and A5 (SCL) that conflict with other usage of A4-A5
                //so we need to put CS on low, RST = A0, DC = A1, MOSI = A2, SCK = A3, MISO = not connected (NC)
@@ -601,7 +600,7 @@ void SmartyKit_DisplayDriver::initSPI(void)
       spiClass = &SPI;
 
       #if defined(_SMARTY_DEBUG_)
-      Serial.print(F("SmartyKit SPI freq = "));Serial.println(DEFAULT_SPI_FREQ, DEC);
+      Serial.print(F("SmartyKit TFT_HARD_SPI freq = "));Serial.println(DEFAULT_SPI_FREQ, DEC);
       #endif
           
       spiSettings = SPISettings(DEFAULT_SPI_FREQ, MSBFIRST, SPI_MODE0);
@@ -611,6 +610,9 @@ void SmartyKit_DisplayDriver::initSPI(void)
   }
   else if (connection == TFT_SOFT_SPI)
   {
+      #if defined(_SMARTY_DEBUG_)
+      Serial.println(F("SmartyKit TFT_SOFT_SPI"));
+      #endif 
       pinMode(_mosi, OUTPUT);
       digitalWrite(_mosi, LOW);
       pinMode(_sck, OUTPUT);
@@ -1471,7 +1473,11 @@ const int VideoBIT7pin =  5;
 int DataBus[8] = {6, 7, 8, 9, 10, 11, 12, 13};
 byte scan_code=0; 
 
-void setup() {
+void setup() 
+{
+  Serial.begin(9600);
+  Serial.println("setup()");
+
   pinMode(VideoBIT7pin, OUTPUT); 
   digitalWrite(VideoBIT7pin, HIGH); //wait until video setup is ready
 
@@ -1508,7 +1514,8 @@ void setup() {
   digitalWrite(VideoBIT7pin, LOW); //default state after restart = 0 (ready to print) 
 }
 
-void loop() {
+void loop() 
+{
   //intentionally left blank
 }
 
