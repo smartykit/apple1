@@ -266,15 +266,15 @@ static inline void avoid_unused_const_variable_compiler_warning(void) {
 #define TFT_SOFT_SPI 1 ///< Display interface = software SPI
 
 
-#ifndef _TERMINAL_
-#define TFT_CS A0
-#define TFT_RST A1
-#define TFT_DC A2
-#define TFT_MOSI A3 // 11
-#define TFT_CLK A4 //13 
-#define TFT_MISO A5
+// #ifndef _TERMINAL_
+// #define TFT_CS A0
+// #define TFT_RST A1
+// #define TFT_DC A2
+// #define TFT_MOSI A3 // 11
+// #define TFT_CLK A4 //13 
+// #define TFT_MISO A5
 
-#else
+// #else
 //so we need to put CS on low, RST = A0, DC = A1, MOSI = A2, SCK = A3, MISO = not connected (NC)
 #define TFT_CS -1
 #define TFT_RST A0
@@ -282,7 +282,8 @@ static inline void avoid_unused_const_variable_compiler_warning(void) {
 #define TFT_MOSI A2
 #define TFT_CLK A3 
 #define TFT_MISO -1
-#endif
+
+//#endif
 
 
 
