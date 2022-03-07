@@ -15,7 +15,7 @@ The video processor code is written by Grant Searle, based on code by Daryl Rict
 
 Their pages are as follows:
 
-http://searle.hostei.com/grant/MonitorKeyboard/index.html
+http://searle.x10host.com/MonitorKeyboard/index.html
 http://sbc.rictor.org/vid3.html
 
 80x25 Terminal library by Dave Curran, based on code from the above. For more info see:
