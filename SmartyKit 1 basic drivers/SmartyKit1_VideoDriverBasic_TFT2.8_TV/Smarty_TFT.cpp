@@ -107,12 +107,39 @@ void SmartyKit_DisplayDriver::setup(uint16_t setupColor, uint16_t setupBgColor, 
       bCursorOn = false;
       setCursor(0,0);
       clearScreen(bgColor);
+      // test ASCII art (a person)
+//      print(' ',color);print('o', color);print(' ', color); print('\n', color); 
+//      print('/',color);print('|', color);print('\\', color); print('\n', color);
+//      print('/',color);print(' ', color);print('\\', color); print('\n', color);
       // startup ASCII art
-      print(' ',color);print('o', color);print(' ', color); print('\n', color); 
-      print('/',color);print('|', color);print('\\', color); print('\n', color);
-      print('/',color);print(' ', color);print('\\', color); print('\n', color);
+      ASCIIart();
 }
 
+
+void SmartyKit_DisplayDriver::ASCIIart(void)
+{ 
+
+  char c = '\0';
+  char* ptrBuffer;
+
+  for (int i = 0; i < SCREEN_ROWS; i++)
+  {
+    ptrBuffer = (char*) malloc(2*SCREEN_COLS);
+    if (ptrBuffer != NULL)
+    {
+      //reading current string from PROGMEM to RAM
+      strcpy_P(ptrBuffer, (char *)pgm_read_word(&(string_table[i])));
+   
+      for (int j = 0; j < SCREEN_COLS; j++)
+      {
+           c = ptrBuffer[j];
+           print(c,color);
+      }
+      free(ptrBuffer);
+    }
+  }
+  return;
+}
 
 void SmartyKit_DisplayDriver::initSPI(void)
 {
