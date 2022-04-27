@@ -50,7 +50,7 @@ char madeWithLoveString[] = "Made with \x03 by Steve Wozniak";
 
 
 // Woz OS console color scheme
-#define CONSOLE_PROMPT_COLOR ILI9341_NAVY
+#define CONSOLE_PROMPT_COLOR ILI9341_BLUE
 #define CONSOLE_COLON_COLOR ILI9341_MAGENTA //ILI9341_PURPLE
 #define CONSOLE_DOT_COLOR ILI9341_OLIVE
 
