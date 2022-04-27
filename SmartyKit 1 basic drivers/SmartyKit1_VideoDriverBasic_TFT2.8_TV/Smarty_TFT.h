@@ -312,6 +312,36 @@ static inline void avoid_unused_const_variable_compiler_warning(void) {
 
 
 
+  // ASCII art
+static  const PROGMEM char line1[SCREEN_COLS] = " _____ ___ ___ _____ _____ ______ __ __ \n";
+static  const PROGMEM char line2[SCREEN_COLS] = "|   __|   |   |  _  |  _  |_    _|  |  |\n";
+static  const PROGMEM char line3[SCREEN_COLS] = "|__   |       |     |     | |  | |     |\n";
+static  const PROGMEM char line4[SCREEN_COLS] = "|_____|__\\_/__|__|__|__\\__\\ |__|  |___| \n";
+static  const PROGMEM char line5[SCREEN_COLS] = " ______ _____   _________   ___________ \n";
+static  const PROGMEM char line6[SCREEN_COLS] = "|      /     | |         | |           |\n";
+static  const PROGMEM char line7[SCREEN_COLS] = "|           <   |       |  |_         _|\n";
+static  const PROGMEM char line8[SCREEN_COLS] = "|______\\_____| |_________|   |_______| \n";
+static  const PROGMEM char line9[SCREEN_COLS] = "                                       \n";
+static  const PROGMEM char line10[SCREEN_COLS] = ".  .  .  .  .  .  .  .  .  .  . _N_.  . \n";
+static  const PROGMEM char line11[SCREEN_COLS] = " : . : . : . : . : . : . : . : .|=|. : .\n";
+static  const PROGMEM char line12[SCREEN_COLS] = ":.:.:.:.:.:.:.:.:.:.\' \'_________|=|_____\n";
+static  const PROGMEM char line13[SCREEN_COLS] = "::::::::::::\'\'\'__..--==-=-=-=-= |=| =-=-\n";
+static  const PROGMEM char line14[SCREEN_COLS] = "::::\'\'\'__..--===-=-=-=-=-=-=-=-=- -=-=-=\n";
+static  const PROGMEM char line15[SCREEN_COLS] = "\'..--==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
+static  const PROGMEM char line16[SCREEN_COLS] = " [======================================\n";
+static  const PROGMEM char line17[SCREEN_COLS] = ":.. | _ .  .  .  .  .  .  .  .  .  _  . \n";
+static  const PROGMEM char line18[SCREEN_COLS] = "::: |[_]____________[=]___________[_]   \n";
+static  const PROGMEM char line19[SCREEN_COLS] = "::: | | ||_____|_____|_____|____|| |  . \n";
+static  const PROGMEM char line20[SCREEN_COLS] = "::: |   ||_____|_____|_____|____||      \n";
+static  const PROGMEM char line21[SCREEN_COLS] = "::: | . ||_____|_____|_____|____|| .  . \n";
+static  const PROGMEM char line22[SCREEN_COLS] = "::: |   ||_____|_____|_____|____||      \n";
+static  const PROGMEM char line23[SCREEN_COLS] = "----|___||_____|_____|_____|____||______\n";
+static  const PROGMEM char line24[SCREEN_COLS] = ",\',\',\',/ , \' , \' , \' . ` . ` . ` .\\` adl\n";
+
+static const char *const string_table[SCREEN_ROWS] PROGMEM = {line1, line2, line3, line4, line5, line6, line7, line8, line9,
+  line10, line11, line12, line13, line14, line15, line16, line17, line18, line19, line20, line21, line22, line23, line24};
+
+
 
 //SmartyKit Display Driver Class members
 class SmartyKit_DisplayDriver
@@ -385,6 +415,7 @@ class SmartyKit_DisplayDriver
   void writePixel(int16_t x, int16_t y, uint16_t color);
   void setCursor(int16_t x, int16_t y, uint8_t relative = CURSOR_RELATIVE);
   void print(uint8_t c, uint16_t color = ILI9341_GREEN);
+  void ASCIIart(void);
 
   inline void SPI_BEGIN_TRANSACTION(void) { };
   inline void SPI_END_TRANSACTION(void)   { };
@@ -399,6 +430,6 @@ class SmartyKit_DisplayDriver
   inline void SPI_CS_LOW(void)  { digitalWrite(_cs, LOW);   };
   inline void SPI_CS_HIGH(void) { digitalWrite(_cs, HIGH);  };
 
+
+
 };
-
-
