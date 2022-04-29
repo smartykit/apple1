@@ -1,6 +1,8 @@
 # SmartyKit Apple I - apple1
 SmartyKit Apple I replica drivers and software (http://www.smartykit.io/).
 
+![SmartyKit 1 assembly](https://github.com/smartykit/apple1/blob/master/SmartyKit-assembly.jpg?raw=true)
+
 All needed libraries included in repository in /Arduino/libraries
 
 ## Keyboard Driver
