@@ -16,8 +16,9 @@ SmartyKit One Apple-1 compatible computer's drivers and software (http://www.sma
 # Highlights
 
 ## SmartyKit One's loading splash screen ASCII art
-Steve Job's garage ASCII art by Adel Faure
-![Steve Job's Garage](https://github.com/smartykit/apple1/blob/master/Garage%20ASCII%20art/png/400x480_dark.png)
+Steve Job's garage ASCII art by Adel Faure:
+
+![Steve Job's Garage](https://github.com/smartykit/apple1/blob/0222fef7f5543b5d2500fdac2c84fd582703d827/Garage%20ASCII%20art/png/400x480.png)
 
 ## SmartyKit One's ROM to run on POM1 Software Emulator 
 POM 1 cross-platform emulator by Verhille Arnaud to test SmartyKit One ROM with software.
