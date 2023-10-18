@@ -16,7 +16,7 @@ Then you can decorate your office or WFH study in a geeky way: https://www.insta
 
 SmartyKit Discord community could be helpful during the build. 
 
-![SmartyKit One PCB Preview](./SmartyKitPCB-3D-preview.png)
+![SmartyKit One PCB Preview](./SmartyKitPCB-preview.jpg)
 
 ## Video instruction on ordering from JLCPCB
 
